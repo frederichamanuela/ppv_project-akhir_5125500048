@@ -5,9 +5,9 @@ import { JADWAL, HARI, BULAN, URUT_HARI, BOBOT, hariIni, tugas, catatan,
          tambahTugas, hapusTugas, tambahCatatan, hapusCatatan,
          getTglDipilih, setTglDipilih, urutkan } from "./state.js";
 import { gambarMinggu, gambarTimeline, gambarKalender, gambarPengingat } from "./beranda.js";
+import { gambarNotes } from "./notes.js";
 
 let filter = "semua";
-let catatanAktif = null;
 let idBaru = null;
 
 function updateJam() {
@@ -21,110 +21,6 @@ setInterval(updateJam, 1000);
 document.querySelectorAll(".rail button").forEach((b) => {
   b.addEventListener("click", () => pindahTab(b.dataset.view));
 });
-
-const judulNote = $("noteTitle");
-const isiNote = $("noteBody");
-let timerSimpan = null;
-
-function tandaiTersimpan() {
-  const n = new Date();
-  $("noteSaved").textContent = `âœ“ TERSIMPAN ${dua(n.getHours())}:${dua(n.getMinutes())}:${dua(n.getSeconds())}`;
-}
-
-const catatanSekarang = () => catatan.find((n) => n.id === catatanAktif);
-
-$("noteAdd").addEventListener("click", () => {
-  const baru = {
-    id: Date.now(),
-    title: "",
-    body: "",
-    ts: new Date().toLocaleDateString("id-ID", { day: "numeric", month: "short" }).toUpperCase()
-  };
-  tambahCatatan(baru);
-  catatanAktif = baru.id;
-  gambarNotes();
-  judulNote.focus();
-  toast("CATATAN BARU DIBUAT.");
-});
-function bikinKalauKosong() {
-  if (catatanSekarang()) return;
-  $("noteAdd").click();
-}
-$("noteEmpty").addEventListener("click", bikinKalauKosong);
-$("noteEmpty").addEventListener("keydown", (e) => {
-  if (e.key === "Enter" || e.key === " ") {
-    e.preventDefault();
-    bikinKalauKosong();
-  }
-});
-
-$("noteDel").addEventListener("click", () => {
-  if (!catatanSekarang()) { toast("PILIH DULU CATATAN YANG MAU DIHAPUS."); return; }
-  hapusCatatan(catatanAktif);  catatanAktif = catatan.length ? catatan[0].id : null;
-  gambarNotes();
-  toast("CATATAN DIHAPUS.");
-});
-
-$("noteDone").addEventListener("click", () => {
-  const n = catatanSekarang();
-  if (!n) { toast("BELUM ADA CATATAN DIPILIH."); return; }
-  clearTimeout(timerSimpan);
-  n.title = judulNote.value.trim();
-  n.body = isiNote.value;
-  catatanAktif = null;
-  $("noteSaved").textContent = "BELUM ADA PERUBAHAN.";
-  gambarNotes();
-  toast("CATATAN TERSIMPAN. SILAKAN BUAT BARU.");
-});
-function autosave() {
-  $("noteSaved").textContent = "â— MENGETIKâ€¦";
-  clearTimeout(timerSimpan);
-  timerSimpan = setTimeout(() => {
-    const n = catatanSekarang();
-    if (!n) return;
-    n.title = judulNote.value.trim();
-    n.body = isiNote.value;
-    gambarDaftarNote();
-    tandaiTersimpan();
-  }, 600);
-}
-judulNote.addEventListener("input", autosave);
-isiNote.addEventListener("input", autosave);
-
-function gambarDaftarNote() {
-  const ul = $("noteList");
-  ul.innerHTML = "";
-  catatan.forEach((n) => {
-    const li = document.createElement("li");
-    const b = document.createElement("button");
-    b.className = n.id === catatanAktif ? "active" : "";
-
-    const judul = document.createElement("b");
-    judul.textContent = n.title || "TANPA JUDUL";
-    const sub = document.createElement("small");
-    sub.textContent = n.ts + (n.body ? " - " + n.body.slice(0, 24) : "");
-    b.appendChild(judul);
-    b.appendChild(sub);
-
-    b.addEventListener("click", () => {
-      catatanAktif = n.id;
-      gambarNotes();
-    });
-    li.appendChild(b);
-    ul.appendChild(li);
-  });
-}
-
-function gambarNotes() {
-  gambarDaftarNote();
-  const n = catatanSekarang();
-  $("noteEmpty").classList.toggle("hidden", !!n);
-  $("noteFields").classList.toggle("hidden", !n);
-  if (n) {
-    judulNote.value = n.title;
-    isiNote.value = n.body;
-  }
-}
 
 const board = $("board");
 const wrap = $("drawWrap");
