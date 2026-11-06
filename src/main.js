@@ -1,59 +1,18 @@
 import { $, form, daftar, inNama, inMatkul, inDeadline, inPrioritas, inKet, selFilter,
          dua, keISO, namaHari, tglPendek, senin, jamKeAngka,
          toast, bunyi, animMasuk, animGoyang, pindahTab } from "./util.js";
+import { JADWAL, HARI, BULAN, URUT_HARI, BOBOT, hariIni, tugas, catatan,
+         tambahTugas, hapusTugas, tambahCatatan, hapusCatatan,
+         getTglDipilih, setTglDipilih, urutkan } from "./state.js";
 
-let tugas = [];
-let catatan = [];
 let filter = "semua";
 let catatanAktif = null;
 let idBaru = null;
 
 function updateJam() {
-const JADWAL = {
-  1: [
-    { mk: "PRAKTIKUM ANIMASI 2D", jam: "08.00-09.40" },
-    { mk: "ANIMASI 2D", jam: "10.00-11.40" },
-    { mk: "SISTEM PEMANCAR", jam: "13.00-14.30" },
-    { mk: "PRAKTIKUM SISTEM PEMANCAR", jam: "14.50-16.20" }
-  ],
-  2: [
-    { mk: "WORKSHOP UI/UX", jam: "08.00-10.30" },
-    { mk: "PEMROGRAMAN VISUAL", jam: "13.00-15.30" }
-  ],
-  3: [
-    { mk: "JURNALISTIK", jam: "08.00-09.40" },
-    { mk: "PRAKTIKUM PEMROGRAMAN VISUAL", jam: "10.00-11.40" },
-    { mk: "JARINGAN KOMPUTER", jam: "13.00-14.30" },
-    { mk: "PRAKTIKUM JARINGAN KOMPUTER", jam: "14.50-16.20" }
-  ],
-  4: [
-    { mk: "TEKNIK PENYIARAN", jam: "08.00-10.30" },
-    { mk: "PRODUKSI KONTEN DIGITAL", jam: "13.00-15.30" }
-  ],
-  5: [], 6: [], 0: []
-};
-
-const HARI = { 1: "SENIN", 2: "SELASA", 3: "RABU", 4: "KAMIS", 5: "JUMAT", 6: "SABTU", 0: "MINGGU" };
-const BULAN = ["JANUARI", "FEBRUARI", "MARET", "APRIL", "MEI", "JUNI", "JULI", "AGUSTUS", "SEPTEMBER", "OKTOBER", "NOVEMBER", "DESEMBER"];
-const URUT_HARI = [1, 2, 3, 4, 5, 6, 0]; // senin dulu, minggu terakhir
-const BOBOT = { "URGENT": 0, "SEMI URGENT": 1, "NORMAL": 2 };
-
-const hariIni = new Date();
-hariIni.setHours(0, 0, 0, 0);
-
 let hariAktif = hariIni.getDay();
-let tglDipilih = null;
 let kalTahun = hariIni.getFullYear();
 let kalBulan = hariIni.getMonth();
-
-function urutkan(arr) {
-  return [...arr].sort((a, b) =>
-    (a.done - b.done) ||
-    (BOBOT[a.prioritas] - BOBOT[b.prioritas]) ||
-    (a.deadline < b.deadline ? -1 : 1) ||
-    (b.id - a.id)
-  );
-}
 
 function updateJam() {
   const n = new Date();
@@ -203,10 +162,10 @@ function gambarKalender() {
       titik.setAttribute("aria-hidden", "true");
       b.appendChild(titik);
     }
-    if (key === tglDipilih) b.classList.add("picked");
+    if (key === getTglDipilih()) b.classList.add("picked");
 
     b.addEventListener("click", () => {
-      tglDipilih = key;
+      setTglDipilih(key);
       inDeadline.value = key;
       $("errDeadline").textContent = "";
       inDeadline.classList.remove("invalid");
@@ -277,7 +236,7 @@ $("noteAdd").addEventListener("click", () => {
     body: "",
     ts: new Date().toLocaleDateString("id-ID", { day: "numeric", month: "short" }).toUpperCase()
   };
-  catatan.unshift(baru);
+  tambahCatatan(baru);
   catatanAktif = baru.id;
   gambarNotes();
   judulNote.focus();
@@ -297,8 +256,7 @@ $("noteEmpty").addEventListener("keydown", (e) => {
 
 $("noteDel").addEventListener("click", () => {
   if (!catatanSekarang()) { toast("PILIH DULU CATATAN YANG MAU DIHAPUS."); return; }
-  catatan = catatan.filter((n) => n.id !== catatanAktif);
-  catatanAktif = catatan.length ? catatan[0].id : null;
+  hapusCatatan(catatanAktif);  catatanAktif = catatan.length ? catatan[0].id : null;
   gambarNotes();
   toast("CATATAN DIHAPUS.");
 });
@@ -874,8 +832,7 @@ function render() {
       });
 
       li.querySelector(".btn-del").addEventListener("click", () => {
-        tugas = tugas.filter((x) => x.id !== t.id);
-        toast("TUGAS DIHAPUS.");
+        hapusTugas(t.id);        toast("TUGAS DIHAPUS.");
         renderSemua();
       });
 
@@ -911,7 +868,7 @@ form.addEventListener("submit", (e) => {
   $("btnSave").disabled = true;
 
   setTimeout(() => {
-    tugas.unshift({
+    const tBaru = {
       id: Date.now(),
       nama: inNama.value.trim(),
       matkul: inMatkul.value,
@@ -919,14 +876,15 @@ form.addEventListener("submit", (e) => {
       prioritas: inPrioritas.value,
       ket: inKet.value.trim(),
       done: false
-    });
+    };
+    tambahTugas(tBaru);
     setLoading(false);
     $("btnSave").disabled = false;
     form.reset();
     inPrioritas.value = "NORMAL";
     $("nameCount").textContent = "0/60";
-    tglDipilih = null;
-    idBaru = tugas[0].id;
+    setTglDipilih(null);
+    idBaru = tBaru.id;
     renderSemua();
     toast("TUGAS DITAMBAHKAN.");
   }, 800);
@@ -948,7 +906,7 @@ inMatkul.addEventListener("change", () => {
 });
 
 inDeadline.addEventListener("change", () => {
-  tglDipilih = inDeadline.value || null;
+  setTglDipilih(inDeadline.value || null);
   gambarKalender();
   validasi(true);
 });
