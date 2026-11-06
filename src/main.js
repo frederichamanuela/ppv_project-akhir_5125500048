@@ -1,7 +1,8 @@
 import { $, form, inNama, dua, toast, pindahTab } from "./util.js";
 import { HARI, BULAN } from "./state.js";
 import { gambarNotes } from "./notes.js";
-import { undoBoard, setLoading, renderSemua } from "./tugas.js";
+import { undoBoard } from "./board.js";
+import { setLoading, renderSemua } from "./tugas.js";
 
 // gambar/logo yang gagal dimuat langsung dibuang (pengganti atribut onerror inline)
 document.addEventListener("error", (e) => {
