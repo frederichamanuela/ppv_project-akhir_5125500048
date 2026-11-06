@@ -1,18 +1,14 @@
-const $ = (id) => document.getElementById(id);
-
-const form = $("taskForm");
-const daftar = $("taskList");
-const inNama = $("inName");
-const inMatkul = $("inMatkul");
-const inDeadline = $("inDeadline");
-const inPrioritas = $("inPrioritas");
-const inKet = $("inDesc");
-const selFilter = $("filterStatus");
+import { $, form, daftar, inNama, inMatkul, inDeadline, inPrioritas, inKet, selFilter,
+         dua, keISO, namaHari, tglPendek, senin, jamKeAngka,
+         toast, bunyi, animMasuk, animGoyang, pindahTab } from "./util.js";
 
 let tugas = [];
 let catatan = [];
 let filter = "semua";
 let catatanAktif = null;
+let idBaru = null;
+
+function updateJam() {
 const JADWAL = {
   1: [
     { mk: "PRAKTIKUM ANIMASI 2D", jam: "08.00-09.40" },
@@ -50,27 +46,6 @@ let tglDipilih = null;
 let kalTahun = hariIni.getFullYear();
 let kalBulan = hariIni.getMonth();
 
-const dua = (n) => String(n).padStart(2, "0");
-const keISO = (d) => `${d.getFullYear()}-${dua(d.getMonth() + 1)}-${dua(d.getDate())}`;
-const namaHari = (s) => HARI[new Date(s + "T00:00:00").getDay()] || "";
-
-function tglPendek(s) {
-  return new Date(s + "T00:00:00")
-    .toLocaleDateString("id-ID", { day: "numeric", month: "short" })
-    .toUpperCase();
-}
-
-function senin(ref) {
-  const d = new Date(ref);
-  d.setDate(d.getDate() - ((d.getDay() + 6) % 7));
-  d.setHours(0, 0, 0, 0);
-  return d;
-}
-
-function jamKeAngka(jam) {
-  const [h, m] = jam.split(".").map(Number);
-  return h + m / 60;
-}
 function urutkan(arr) {
   return [...arr].sort((a, b) =>
     (a.done - b.done) ||
@@ -80,61 +55,6 @@ function urutkan(arr) {
   );
 }
 
-let timerToast;
-function toast(pesan) {
-  const t = $("toast");
-  t.textContent = pesan;
-  t.classList.add("show");
-  clearTimeout(timerToast);
-  timerToast = setTimeout(() => t.classList.remove("show"), 2200);
-}
-
-// ASET AUDIO: BUNYI SELESAI, GAGAL DIMUAT = DIAM
-function bunyi() {
-  try {
-    new Audio("assets/selesai.wav").play().catch(() => {});
-  } catch (e) {}
-}
-
-// ANIMASI PUNYA FUNGSI, HANYA TRANSFORM/OPACITY, HORMATI REDUCED-MOTION
-const GERAK_MINIM = matchMedia("(prefers-reduced-motion: reduce)").matches;
-function animMasuk(el, geser = 10) {
-  if (GERAK_MINIM || !el.animate) return;
-  el.animate(
-    [{ opacity: 0, transform: `translateY(${geser}px)` }, { opacity: 1, transform: "none" }],
-    { duration: 250, easing: "ease-out" }
-  );
-}
-function animGoyang(el) {
-  if (GERAK_MINIM || !el.animate) return;
-  el.animate(
-    [
-      { transform: "none" },
-      { transform: "translateX(-7px)" },
-      { transform: "translateX(6px)" },
-      { transform: "translateX(-4px)" },
-      { transform: "none" }
-    ],
-    { duration: 300, easing: "ease-out" }
-  );
-}
-let idBaru = null;
-
-function pindahTab(nama) {
-  document.querySelectorAll(".view").forEach((v) => v.classList.add("hidden"));
-  const tampil = $("view-" + nama);
-  tampil.classList.remove("hidden");
-  animMasuk(tampil);
-  document.querySelectorAll(".rail button").forEach((b) => {
-    b.classList.toggle("active", b.dataset.view === nama);
-  });
-  window.scrollTo({ top: 0 });
-}
-
-document.querySelectorAll(".rail button").forEach((b) => {
-  b.addEventListener("click", () => pindahTab(b.dataset.view));
-});
-
 function updateJam() {
   const n = new Date();
   $("clockTime").textContent = dua(n.getHours()) + ":" + dua(n.getMinutes());
@@ -142,6 +62,10 @@ function updateJam() {
 }
 updateJam();
 setInterval(updateJam, 1000);
+
+document.querySelectorAll(".rail button").forEach((b) => {
+  b.addEventListener("click", () => pindahTab(b.dataset.view));
+});
 
 function gambarMinggu() {
   const sn = senin(hariIni);
