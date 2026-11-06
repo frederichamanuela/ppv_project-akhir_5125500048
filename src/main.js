@@ -1,15 +1,12 @@
-import { $, form, daftar, inNama, inMatkul, inDeadline, inPrioritas, inKet, selFilter,
-         dua, keISO, namaHari, tglPendek, senin, jamKeAngka,
-         toast, bunyi, animMasuk, animGoyang, pindahTab } from "./util.js";
-import { JADWAL, HARI, BULAN, URUT_HARI, BOBOT, hariIni, tugas, catatan,
-         tambahTugas, hapusTugas, tambahCatatan, hapusCatatan,
-         getTglDipilih, setTglDipilih, urutkan } from "./state.js";
-import { gambarMinggu, gambarTimeline, gambarKalender, gambarPengingat } from "./beranda.js";
+import { $, form, inNama, dua, toast, pindahTab } from "./util.js";
+import { HARI, BULAN } from "./state.js";
 import { gambarNotes } from "./notes.js";
-import { undoBoard, setLoading, render, renderSemua } from "./tugas.js";
+import { undoBoard, setLoading, renderSemua } from "./tugas.js";
 
-let filter = "semua";
-let idBaru = null;
+// gambar/logo yang gagal dimuat langsung dibuang (pengganti atribut onerror inline)
+document.addEventListener("error", (e) => {
+  if (e.target.tagName === "IMG") e.target.remove();
+}, true);
 
 function updateJam() {
   const n = new Date();
