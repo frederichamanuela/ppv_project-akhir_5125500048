@@ -1,5 +1,7 @@
 // state.js — satu-satunya pemilik data aplikasi: daftar tugas, catatan, konstanta jadwal, dan penyaringnya.
 
+import { muat, simpan } from "./simpanan.js";
+
 export const JADWAL = {
   1: [
     { mk: "PRAKTIKUM ANIMASI 2D", jam: "08.00-09.40" },
@@ -34,6 +36,16 @@ hariIni.setHours(0, 0, 0, 0);
 
 export let tugas = [];
 export let catatan = [];
+
+// muat ulang dari penyimpanan aman saat aplikasi hidup (data rusak sudah disaring oleh simpanan.js)
+const awal = muat();
+tugas = awal.tugas;
+catatan = awal.catatan;
+
+// dipanggil setelah tiap perubahan supaya data tidak hilang saat reload
+export function simpanSemua() {
+  simpan({ tugas, catatan });
+}
 
 // tanggal yang dipilih lewat kalender mini, dipakai beranda dan form tugas
 let tglDipilih = null;
