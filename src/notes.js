@@ -70,9 +70,9 @@ function autosave() {
     if (!n) return;
     n.title = judulNote.value.trim();
     n.body = isiNote.value;
-    simpanSemua();
     gambarDaftarNote();
-    tandaiTersimpan();
+    if (simpanSemua()) tandaiTersimpan();
+    else $("noteSaved").textContent = "! BELUM TERSIMPAN PERMANEN.";
   }, 600);
 }
 judulNote.addEventListener("input", autosave);

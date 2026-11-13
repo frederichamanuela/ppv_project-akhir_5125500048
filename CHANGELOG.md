@@ -10,6 +10,7 @@ Format mengikuti [Keep a Changelog](https://keepachangelog.com/); versi mengikut
 - README lengkap (cara jalan, struktur modul, kontrak komponen & penyimpanan), CHANGELOG, ROADMAP Sprint 4.
 ### Fixed
 - Aplikasi tidak lagi layar kosong saat isi penyimpanan dirusak.
+- Status catatan tidak lagi menampilkan "TERSIMPAN" saat penyimpanan sebenarnya gagal; muncul "BELUM TERSIMPAN PERMANEN".
 
 ## [0.3.0] - 2026-11-06
 ### Changed

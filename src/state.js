@@ -44,7 +44,7 @@ catatan = awal.catatan;
 
 // dipanggil setelah tiap perubahan supaya data tidak hilang saat reload
 export function simpanSemua() {
-  simpan({ tugas, catatan });
+  return simpan({ tugas, catatan });
 }
 
 // tanggal yang dipilih lewat kalender mini, dipakai beranda dan form tugas

@@ -45,8 +45,10 @@ export function simpan(data) {
       catatan: Array.isArray(data.catatan) ? data.catatan : []
     }));
     cadanganMemori = { tugas: [...data.tugas], catatan: [...data.catatan] };
+    return true;
   } catch (err) {
     pesan('Data tidak tersimpan permanen: penyimpanan penuh atau diblokir.');
+    return false;
   }
 }
 
