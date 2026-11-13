@@ -4,7 +4,7 @@ Format mengikuti [Keep a Changelog](https://keepachangelog.com/); versi mengikut
 
 ## [0.4.0] - 2026-11-13
 ### Added
-- Komponen reusable `KartuTugas`, `BuatBadge`, dan `PesanKosong` di `src/komponen.js`; markup kartu tugas ditulis sekali dan dipakai untuk semua item daftar, teks pengguna lewat `textContent`.
+- Komponen reusable `KartuTugas` dan `BuatBadge` di `src/komponen.js`; markup kartu tugas ditulis sekali dan dipakai untuk semua item daftar, teks pengguna lewat `textContent`.
 - Penyimpanan aman proyek di `src/simpanan.js`: `KUNCI` berversi `tugaside:v1`, `muat()` menyaring data rusak dan tidak pernah melempar, `simpan()` dibungkus try/catch, cadangan di memori.
 - Tugas dan catatan sekarang tersimpan di localStorage dan bertahan setelah reload; pengguna diberi tahu lewat toast bila penyimpanan penuh/diblokir.
 - README lengkap (cara jalan, struktur modul, kontrak komponen & penyimpanan), CHANGELOG, ROADMAP Sprint 4.
