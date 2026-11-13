@@ -4,7 +4,7 @@ import { $, form, daftar, inNama, inMatkul, inDeadline, inPrioritas, inKet, selF
          dua, tglPendek, toast, bunyi, animMasuk, animGoyang, keISO } from "./util.js";
 import { BOBOT, hariIni, tugas, tambahTugas, hapusTugas, urutkan, getTglDipilih, setTglDipilih, simpanSemua } from "./state.js";
 import { gambarMinggu, gambarTimeline, gambarKalender, gambarPengingat } from "./beranda.js";
-import { KartuTugas, PesanKosong } from "./komponen.js";
+import { KartuTugas } from "./komponen.js";
 
 let filter = "semua";
 let idBaru = null;
@@ -60,10 +60,18 @@ export function render() {
 
   if (tugas.length) {
     if (!tampil.length) {
-      const kosong = PesanKosong("TIDAK ADA DI FILTER INI.", "task t-message");
-      kosong.innerHTML = `<div class="t-main"><div class="t-name"></div><div class="t-meta"></div></div>`;
-      kosong.querySelector(".t-name").textContent = "TIDAK ADA DI FILTER INI.";
-      kosong.querySelector(".t-meta").textContent = "GANTI FILTER KE SEMUA.";
+      const kosong = document.createElement("li");
+      kosong.className = "task";
+      const utama = document.createElement("div");
+      utama.className = "t-main";
+      const nama = document.createElement("div");
+      nama.className = "t-name";
+      nama.textContent = "TIDAK ADA DI FILTER INI.";
+      const ket = document.createElement("div");
+      ket.className = "t-meta";
+      ket.textContent = "GANTI FILTER KE SEMUA.";
+      utama.append(nama, ket);
+      kosong.appendChild(utama);
       daftar.appendChild(kosong);
     }
 

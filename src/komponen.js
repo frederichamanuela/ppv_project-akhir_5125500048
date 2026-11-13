@@ -57,14 +57,6 @@ export function BuatBadge(teks, kelas) {
   return b;
 }
 
-// PesanKosong(teks) -> HTMLElement. Dipakai: daftar tugas kosong, filter tanpa hasil, dan pesan pengingat kosong.
-export function PesanKosong(teks, kelas = 'kosong') {
-  const p = document.createElement('p');
-  p.className = kelas;
-  p.textContent = teks;
-  return p;
-}
-
 function tglPendek(s) {
   if (!s || isNaN(new Date(s + 'T00:00:00'))) return 'TANPA TANGGAL';
   return new Date(s + 'T00:00:00')

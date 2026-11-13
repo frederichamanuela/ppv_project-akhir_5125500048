@@ -17,7 +17,7 @@ main.js ──> tugas.js    ──> util.js, state.js, beranda.js, komponen.js
 | `util.js` | Helper lintas fitur: `$`, pegangan DOM, format tanggal, toast, bunyi, animasi, pindah tab | `state.js` (HARI) |
 | `state.js` | Pemilik data: `tugas`, `catatan`, JADWAL, konstanta, `urutkan()`, `simpanSemua()` — bebas DOM | `simpanan.js` |
 | `simpanan.js` | Penyimpanan aman: `KUNCI = 'tugaside:v1'`, `muat()` menyaring data rusak, `simpan()` try/catch, cadangan memori | — |
-| `komponen.js` | Komponen reusable: `KartuTugas()`, `BuatBadge()`, `PesanKosong()` — teks pengguna lewat `textContent` | — |
+| `komponen.js` | Komponen reusable: `KartuTugas()`, `BuatBadge()` — teks pengguna lewat `textContent` | — |
 | `beranda.js` | Strip minggu, timeline jadwal, kalender mini, pengingat | `util.js`, `state.js` |
 | `tugas.js` | Form tambah + validasi, daftar terurut (via `KartuTugas`), statistik, `renderSemua()` | `util.js`, `state.js`, `beranda.js`, `komponen.js` |
 | `notes.js` | Daftar catatan, editor, autosave, status tersimpan | `util.js`, `state.js` |

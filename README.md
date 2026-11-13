@@ -39,7 +39,7 @@ src/
   util.js       helper: $, format tanggal, toast, bunyi, animasi, pindah tab
   state.js      pemilik data tugas/catatan + konstanta jadwal + urutkan (tanpa DOM)
   simpanan.js   penyimpanan aman data proyek (localStorage)
-  komponen.js   komponen reusable: KartuTugas, BuatBadge, PesanKosong
+  komponen.js   komponen reusable: KartuTugas, BuatBadge
   beranda.js    strip minggu, timeline jadwal, kalender mini, pengingat
   tugas.js      form + validasi + daftar tugas + statistik
   notes.js      daftar catatan + editor + autosave
@@ -56,7 +56,6 @@ Arah impor satu jalur: `main.js` → fitur (`tugas.js`, `notes.js`, `beranda.js`
 |---|---|---|
 | `KartuTugas(tugas)` | Menerima objek `{ id, nama, matkul, deadline, prioritas, ket, done }`, mengembalikan `HTMLElement` (`li.task`). Semua teks pengguna lewat `textContent` (judul `<b>tebal</b>` tampil sebagai teks, bukan HTML). | Semua item daftar tugas (`#taskList`) |
 | `BuatBadge(teks, kelas)` | Mengembalikan `span` berisi teks; dipakai untuk badge matkul, prioritas, dan tanggal di dalam `KartuTugas`. | 3 badge per kartu tugas |
-| `PesanKosong(teks, kelas?)` | Mengembalikan elemen berisi pesan, teks lewat `textContent`. | Daftar kosong, filter tanpa hasil, pengingat kosong |
 
 ## 5. Kontrak Penyimpanan (`src/simpanan.js`)
 
