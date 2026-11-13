@@ -16,7 +16,15 @@
 - [x] Peta ketergantungan di `MODULE_MAP.md`
 - [x] Riwayat commit bertahap `refactor:` per langkah, cabang `refactor/modul`, merge ke `main`
 
-## Sprint 4 (rencana)
-- [ ] Penyimpanan lokal (localStorage) supaya tugas/catatan tidak hilang saat reload
+## Sprint 4 (SELESAI, v0.4.0) — Anti-banting: komponen, penyimpanan aman, perawatan
+- [x] Komponen reusable `KartuTugas` / `BuatBadge` / `PesanKosong`; teks pengguna lewat `textContent`
+- [x] Penyimpanan aman `tugaside:v1`: `muat()` menyaring data rusak, `simpan()` try/catch, cadangan memori
+- [x] Tugas & catatan bertahan setelah reload; peringatan toast saat penyimpanan penuh/diblokir
+- [x] Uji skenario rusak S2 dan S6 lewat DevTools (aplikasi tetap hidup)
+- [x] README lengkap, CHANGELOG, tag `v0.4.0`
+
+## Sprint 5 (rencana)
 - [ ] Ekspor/impor data (JSON)
-- [ ] Tes otomatis untuk `state.js` (urutkan, validasi)
+- [ ] Penyimpanan coretan Board
+- [ ] Tes otomatis untuk `state.js` (urutkan, validasi) dan `simpanan.js` (data rusak)
+

@@ -1,81 +1,96 @@
-TugasIde: Tracker Tugas Mahasiswa
+# TugasIde: Tracker Tugas Mahasiswa
 
-Website untuk mencatat tugas kuliah, brainstorming ide, mencatat catatan, dan juga memberikan fitur pomodoro di dalamnya. 
+Website untuk mencatat tugas kuliah, brainstorming ide, mencatat catatan, dan timer fokus (Pomodoro).
 
-A. Cara menjalankan website ini:
-1. Ekstrak file zip-nya.
-2. Klik dua kali `index.html`, langsung jalan di browser. 
-3. Pada bagian beranda untuk melihat jadwal, mencatat tugas, brainstorming pada whiteboard, fitur notes untuk mencatat catatan dan juga fitur timer.
+## 1. Cara Menjalankan
 
-B. Fitur
-- Opening loader: logo "TUGASIDE" dan bar loading yang geser sendiri.
-- Bar kiri: 5 tab (Beranda / Tugas / Notes / Board / Fokus).
-- Bar fokus: 5 kartu timer ring ungu (15/25/30/45/60 menit) + kartu CUSTOM (input menit se-kartu + MULAI, validasi 1-180, ring ngikutin durasi), jalannya sendiri-sendiri. Pas klik mulai, langsung muncul popup besar. Kalau waktunya habis, alarm bunyi dan lanjut hitung waktu lembur. Sisa waktu juga kelihatan di judul tab browser.
-- Header: hari, tanggal lengkap, jam:menit (tanpa detik) dan juga profile.
-- Beranda: kalender mini, pengingat, strip minggu, dan timeline jam jadwal kuliah + daftar nama task yang deadline-nya pas tanggal tampil
-- Kalender mini: tanggal yang ada titiknya berarti masih ada deadline yang belum selesai. Klik tanggal, deadline di form langsung keisi dan layar loncat ke form.
-- Notes: daftar di kiri, editor di kanan, autosave, dan ada indikator status (mengetik / tersimpan + jam). Isi catatan pakai kapital normal (nggak dipaksa capslock). Tombol Selesai buat nyimpen sekalian nutup catatan. Klik area kosong langsung bikin catatan baru.
-- Board brainstorming: stabilo 5 warna dalam grupnya sendiri (kuning, hijau, pink, biru, oranye, klik dot langsung ganti), teks bebas (klik papan, tarik buat pindah), dan sticky note 3 warna yang bisa digeser, di-scale lewat sudut, dan dihapus satuan. Format teks: 7 font + popup palet 10 warna + warna bebas + A-/A+ + Bold/Italic/Underline (ikon + status aktif kelihatan). Ada hapus semua (pakai konfirmasi), dan Ctrl+Z. Offline, nggak butuh Figma.
-- Tambah tugas: isi nama, matkul (13 pilihan), deadline, prioritas (Urgent / Semi Urgent / Normal), dan keterangan (opsional). Daftar otomatis keurut: Urgent dulu, lalu deadline terdekat, yang udah selesai di paling bawah.
-- Tandai selesai lewat checkbox, hapus lewat tombol silang yang muncul.
-- Filter: Semua / Aktif / Selesai.
-- Statistik: Total / Selesai / Aktif.
-- Aset media: `assets/logo.svg` = ikon (ada alt, disembunyikan bila gagal dimuat) + `assets/kosong.svg` = gambar ilustrasi empty state (ada alt, disembunyikan bila gagal dimuat) + `assets/selesai.wav` = audio (bunyi pas tugas selesai dan timer selesai, diam + bunyi cadangan bila gagal dimuat).
+Aplikasi memakai ES Modules, jadi **harus lewat server lokal** (klik dua kali `index.html` akan gagal karena `file://`).
 
-C. Validasi Form (3 aturan)
+```bash
+cd project-akhir
+python -m http.server 5500
+# buka http://127.0.0.1:5500/
+```
+
+Alternatif: Live Server (VS Code) atau `npx vite`. Tanpa build step, tanpa dependensi eksternal.
+
+## 2. Fitur MVP dan Statusnya
+
+| Fitur | Status |
+|---|---|
+| Tambah tugas (nama, matkul, deadline, prioritas, keterangan) + validasi 3 aturan | Selesai |
+| Daftar tugas terurut (Urgent → deadline → selesai di bawah) + filter Semua/Aktif/Selesai + statistik | Selesai |
+| Tandai selesai, hapus tugas | Selesai |
+| Beranda: strip minggu, timeline jadwal, kalender mini (titik deadline), pengingat | Selesai |
+| Notes: daftar + editor + autosave + status tersimpan | Selesai |
+| Board: stabilo canvas, sticky note 3 warna, drag/scale, undo, format teks | Selesai |
+| Fokus: timer Pomodoro 5 kartu + custom (iframe `timer.html`) | Selesai |
+| Penyimpanan lokal tugas & catatan (tahan data rusak) | Selesai (Sprint 4) |
+| Penyimpanan untuk coretan Board | Belum (sengaja; papan hanya untuk sesi berjalan) |
+
+## 3. Struktur Modul
+
+```
+index.html      markup halaman
+style.css       tema dashboard (dipakai juga timer.html)
+timer.html      timer Pomodoro mandiri (dimuat lewat iframe)
+src/
+  main.js       titik masuk: jam, navigasi tab, preloader, Ctrl+Z, peringatan penyimpanan
+  util.js       helper: $, format tanggal, toast, bunyi, animasi, pindah tab
+  state.js      pemilik data tugas/catatan + konstanta jadwal + urutkan (tanpa DOM)
+  simpanan.js   penyimpanan aman data proyek (localStorage)
+  komponen.js   komponen reusable: KartuTugas, BuatBadge, PesanKosong
+  beranda.js    strip minggu, timeline jadwal, kalender mini, pengingat
+  tugas.js      form + validasi + daftar tugas + statistik
+  notes.js      daftar catatan + editor + autosave
+  board.js      canvas stabilo + sticky note + undo + toolbar teks
+assets/         logo.svg, kosong.svg, selesai.wav
+uji/            pemeriksa dari LAMPIRAN (tidak diubah)
+```
+
+Arah impor satu jalur: `main.js` → fitur (`tugas.js`, `notes.js`, `beranda.js`, `board.js`) → `komponen.js` / `util.js` / `state.js` → `simpanan.js`. Tidak ada dependensi melingkar.
+
+## 4. Kontrak Komponen (`src/komponen.js`)
+
+| Komponen | Kontrak | Dipakai di |
+|---|---|---|
+| `KartuTugas(tugas)` | Menerima objek `{ id, nama, matkul, deadline, prioritas, ket, done }`, mengembalikan `HTMLElement` (`li.task`). Semua teks pengguna lewat `textContent` (judul `<b>tebal</b>` tampil sebagai teks, bukan HTML). | Semua item daftar tugas (`#taskList`) |
+| `BuatBadge(teks, kelas)` | Mengembalikan `span` berisi teks; dipakai untuk badge matkul, prioritas, dan tanggal di dalam `KartuTugas`. | 3 badge per kartu tugas |
+| `PesanKosong(teks, kelas?)` | Mengembalikan elemen berisi pesan, teks lewat `textContent`. | Daftar kosong, filter tanpa hasil, pengingat kosong |
+
+## 5. Kontrak Penyimpanan (`src/simpanan.js`)
+
+| Ekspor | Perilaku |
+|---|---|
+| `KUNCI = 'tugaside:v1'` | Kunci localStorage berversi. |
+| `muat()` | Selalu mengembalikan `{ tugas: [...], catatan: [...] }`; tidak pernah melempar galat. JSON rusak, bukan objek, atau item tidak sah disaring keluar. Bila localStorage diblokir, memakai cadangan di memori. |
+| `simpan(data)` | Menulis JSON ke `KUNCI` dalam try/catch; gagal (penuh/diblokir) tidak melempar, hanya memperingatkan. |
+
+Bila data rusak atau penyimpanan gagal, aplikasi tetap hidup dan pengguna diberi tahu lewat toast (event `tugaside:peringatan`) serta pesan di Console.
+
+## 6. Validasi Form (3 aturan)
+
 1. Nama tugas minimal 3 karakter.
 2. Mata kuliah wajib dipilih.
-3. Deadline wajib diisi dan nggak boleh tanggal yang udah lewat.
+3. Deadline wajib diisi dan tidak boleh tanggal yang sudah lewat.
 
-D. Desain
-Saya menggunakan desain sederhana dengan warna ungu dan putih agar tampilan aplikasi tetap mudah dibaca dan tidak terlalu ramai.
-1. Border tipis 1px + bayangan lembut, biar kesannya kalem dan nggak kayak tempelan tebal.
-2. Radius dibedain: kartu 12-20, input 10, badge 6. Biar ada hierarki, nggak semuanya bentuk pil.
-3. Pink dipakai seperlunya aja (tab aktif, tanggal hari ini, badge Semi) supaya aksennya tetap satu.
-4. Header blur jadi satu-satunya permukaan kaca.
-5. Tanpa marquee, tanpa gradien, tanpa dekorasi yang nggak ada gunanya.
-6. Capslock, font Inter/system, dan palet ini sesuai permintaan pemilik.
+## 7. Bonus: Pintasan Keyboard
 
-E. Font
-Header menggunakan font apple dan body text menggunakan font inter
-1. Semua teks capslock (lewat CSS `text-transform`).
-2. Heading: system Apple (`-apple-system` / SF Pro Display, fallback Segoe UI), 20px, rata kiri.
-3. Caption helper: 11px abu-abu (`.cap`), selalu rata kiri di bawah judul.
-4. Body/label: Inter, 13-14px.
-
-
-F. Bonus: Pintasan Keyboard
-1. `Enter` pas fokus di form = simpan tanpa mouse.
+1. `Enter` saat fokus di form = simpan tanpa mouse.
 2. `/` = loncat ke form tugas, `Esc` = reset form.
-3. `Ctrl+Z` di Board = batalin langkah terakhir. Aman, karena pas ngetik di form, Ctrl+Z tetap undo tulisan.
+3. `Ctrl+Z` di Board = batalkan langkah terakhir (saat mengetik di form tetap undo tulisan).
 
-G. Tabel Animasi (Tugas 4)
-| Kode | Animasi | Pemicu | Properti | Durasi | Fungsi |
-|---|---|---|---|---|---|
-| A-01 | Tampilan masuk | Klik tab rail | opacity + transform | 250ms ease-out | Penanda bahwa tampilan baru sudah muncul |
-| A-02 | Kartu baru masuk | Submit form | opacity + transform | 250ms ease-out | Penanda di mana data baru muncul |
-| A-03 | Isian salah bergetar | Validasi gagal | transform | 300ms ease-out | Penanda kolom mana yang salah |
-- Semua pakai `element.animate()`, cuma transform/opacity.
-- Kalau pengguna mengaktifkan "kurangi gerak" (`prefers-reduced-motion: reduce`), semua animasi dan transisi dimatikan (dicek lewat matchMedia di JS + media query di CSS).
+## 8. Animasi dan Aksesibilitas
 
-H. Daftar Event (6 jenis)
-| # | Event | Lokasi | Fungsi |
-|---|---|---|---|
-| 1 | `submit` | Form tugas | Validasi + loading + tambah tugas |
-| 2 | `click` | Rail, strip hari, tanggal kalender, checkbox, hapus, notes, board, timer | Pindah tampilan, kelola data, gambar, fokus |
-| 3 | `input` | Nama tugas, judul/isi notes | Counter, hapus error, autosave |
-| 4 | `change` | Matkul, deadline, prioritas, filter, format board | Validasi, sinkron kalender, filter |
-| 5 | `keydown` | Document | `Esc`, `/`, `Enter`, `Ctrl+Z` |
-| 6 | `mouseover`/`mouseout` | Kartu tugas | Highlight kartu |
+- Animasi masuk (tab, kartu baru) dan getaran isian salah memakai `element.animate()`, hanya `transform`/`opacity`, 250–300ms.
+- `prefers-reduced-motion: reduce` mematikan animasi/transisi (matchMedia di JS + media query di CSS).
 
-I. Struktur File
-index.html  - struktur halaman
-style.css   - tema dashboard (dipakai juga sama timer.html)
-timer.html  - 5 kartu timer ring mandiri (dimuat lewat iframe)
-app.js      - event, validasi, render, kalender, timeline, notes, whiteboard, animasi
-assets/     - logo.svg + kosong.svg + selesai.wav
-README.md   - file ini
+## 9. Kredit Aset dan Pustaka
 
-J. Referensi
-1. https://id.pinterest.com/pin/707276316520163390/ (tampilan ui nya)
-2. https://oatside.com/ (fitur interaktif animasinya)
+- Tanpa pustaka/framework eksternal: HTML, CSS, dan JavaScript murni (ES Modules).
+- `assets/logo.svg`, `assets/kosong.svg`, `assets/selesai.wav`: aset buatan sendiri untuk aplikasi ini.
+- Referensi desain: <https://id.pinterest.com/pin/707276316520163390/> (tampilan UI) dan <https://oatside.com/> (animasi interaktif).
+
+## 10. Catatan Integritas (P12)
+
+Sebagian kode refactor dan pengaturan dokumen dibantu asisten AI (OpenCode). Berkas pemeriksa di `uji/` tidak diubah. Riwayat lengkap ada di `git log` dan `CHANGELOG.md`.
