@@ -18,6 +18,7 @@ export function KartuTugas(t) {
   const nama = document.createElement('div');
   nama.className = 't-name';
   nama.textContent = (t.nama || '').toUpperCase(); // teks pengguna aman, bukan HTML
+  utama.appendChild(nama);
 
   // keterangan opsional (kompatibel mundur dengan data lama tanpa ket)
   if ((t.ket || '').trim()) {

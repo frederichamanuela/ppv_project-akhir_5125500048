@@ -21,6 +21,9 @@ document.querySelectorAll(".rail button").forEach((b) => {
   b.addEventListener("click", () => pindahTab(b.dataset.view));
 });
 
+// penyimpanan bermasalah (penuh/diblokir/rusak): pengguna diberi tahu lewat toast, aplikasi tetap jalan
+window.addEventListener("tugaside:peringatan", (e) => toast(e.detail));
+
 const teksLoader = ["MEMUAT…", "MENYIAPKAN JADWAL…", "SELESAI…"];
 let langkah = 0;
 

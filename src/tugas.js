@@ -2,8 +2,9 @@
 
 import { $, form, daftar, inNama, inMatkul, inDeadline, inPrioritas, inKet, selFilter,
          dua, tglPendek, toast, bunyi, animMasuk, animGoyang, keISO } from "./util.js";
-import { BOBOT, hariIni, tugas, tambahTugas, hapusTugas, urutkan, getTglDipilih, setTglDipilih } from "./state.js";
+import { BOBOT, hariIni, tugas, tambahTugas, hapusTugas, urutkan, getTglDipilih, setTglDipilih, simpanSemua } from "./state.js";
 import { gambarMinggu, gambarTimeline, gambarKalender, gambarPengingat } from "./beranda.js";
+import { KartuTugas, PesanKosong } from "./komponen.js";
 
 let filter = "semua";
 let idBaru = null;
@@ -54,49 +55,37 @@ export function render() {
     return filter === "selesai" ? t.done : !t.done;
   }));
 
-  daftar.innerHTML = "";
+  daftar.replaceChildren();
   $("empty").classList.toggle("hidden", tugas.length > 0);
 
   if (tugas.length) {
     if (!tampil.length) {
-      daftar.innerHTML = `<li class="task"><div class="t-main"><div class="t-name">TIDAK ADA DI FILTER INI.</div><div class="t-meta">GANTI FILTER KE SEMUA.</div></div></li>`;
+      const kosong = PesanKosong("TIDAK ADA DI FILTER INI.", "task t-message");
+      kosong.innerHTML = `<div class="t-main"><div class="t-name"></div><div class="t-meta"></div></div>`;
+      kosong.querySelector(".t-name").textContent = "TIDAK ADA DI FILTER INI.";
+      kosong.querySelector(".t-meta").textContent = "GANTI FILTER KE SEMUA.";
+      daftar.appendChild(kosong);
     }
 
     tampil.forEach((t) => {
-      const li = document.createElement("li");
-      li.className = "task" + (t.done ? " done" : "");
-      const telat = !t.done && new Date(t.deadline + "T00:00:00") < hariIni;
+      const li = KartuTugas(t);
       if (t.id === idBaru) {
         idBaru = null;
         animMasuk(li, 12);
-      }
-      const kelasPrioritas = t.prioritas.replace(/\s/g, "");
-
-      li.innerHTML = `<input type="checkbox" class="t-check" ${t.done ? "checked" : ""} title="SELESAI?" />
-        <div class="t-main"><div class="t-name"></div>
-        <div class="t-meta"><span class="badge">${t.matkul}</span><span class="badge ${kelasPrioritas}">${t.prioritas}</span><span class="badge ${telat ? "overdue" : ""}">${tglPendek(t.deadline)}${telat ? " - TERLEWAT" : ""}</span></div></div>
-        <div class="t-actions"><button class="btn-del" title="HAPUS">✕</button></div>`;
-
-
-      li.querySelector(".t-name").textContent = t.nama.toUpperCase();
-      // KOMPATIBEL MUNDUR: tugas lama tanpa ket tetap kebaca
-      if ((t.ket || "").trim()) {
-        const dd = document.createElement("div");
-        dd.className = "t-desc";
-        dd.textContent = t.ket;
-        li.querySelector(".t-main").insertBefore(dd, li.querySelector(".t-meta"));
       }
 
       li.querySelector(".t-check").addEventListener("click", () => {
         t.done = !t.done;
         if (t.done) bunyi();
         toast(t.done ? "TUGAS SELESAI." : "TUGAS DIAKTIFKAN KEMBALI.");
+        simpanSemua();
         renderSemua();
       });
 
       li.querySelector(".btn-del").addEventListener("click", () => {
         hapusTugas(t.id);
         toast("TUGAS DIHAPUS.");
+        simpanSemua();
         renderSemua();
       });
 
@@ -107,6 +96,7 @@ export function render() {
     });
   }
 
+  simpanSemua();
   updateStatistik();
 }
 

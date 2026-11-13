@@ -1,7 +1,7 @@
 // notes.js — satu-satunya pemilik fitur catatan: daftar di kiri, editor kanan, autosave, dan status tersimpannya.
 
 import { $, dua, toast } from "./util.js";
-import { catatan, tambahCatatan, hapusCatatan } from "./state.js";
+import { catatan, tambahCatatan, hapusCatatan, simpanSemua } from "./state.js";
 
 const judulNote = $("noteTitle");
 const isiNote = $("noteBody");
@@ -23,6 +23,7 @@ $("noteAdd").addEventListener("click", () => {
     ts: new Date().toLocaleDateString("id-ID", { day: "numeric", month: "short" }).toUpperCase()
   };
   tambahCatatan(baru);
+  simpanSemua();
   catatanAktif = baru.id;
   gambarNotes();
   judulNote.focus();
@@ -43,6 +44,7 @@ $("noteEmpty").addEventListener("keydown", (e) => {
 $("noteDel").addEventListener("click", () => {
   if (!catatanSekarang()) { toast("PILIH DULU CATATAN YANG MAU DIHAPUS."); return; }
   hapusCatatan(catatanAktif);
+  simpanSemua();
   catatanAktif = catatan.length ? catatan[0].id : null;
   gambarNotes();
   toast("CATATAN DIHAPUS.");
@@ -54,6 +56,7 @@ $("noteDone").addEventListener("click", () => {
   clearTimeout(timerSimpan);
   n.title = judulNote.value.trim();
   n.body = isiNote.value;
+  simpanSemua();
   catatanAktif = null;
   $("noteSaved").textContent = "BELUM ADA PERUBAHAN.";
   gambarNotes();
@@ -67,6 +70,7 @@ function autosave() {
     if (!n) return;
     n.title = judulNote.value.trim();
     n.body = isiNote.value;
+    simpanSemua();
     gambarDaftarNote();
     tandaiTersimpan();
   }, 600);
