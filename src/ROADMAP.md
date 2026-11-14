@@ -9,7 +9,7 @@
 - [x] Board: papan stabilo canvas + sticky note + undo
 - [x] Fokus: timer pomodoro (iframe `timer.html`)
 
-## Sprint 3 (INI) — Bedah monolit jadi ES Modules
+## Sprint 3 (SELESAI) — Bedah monolit jadi ES Modules
 - [x] Pecah `app.js` (±1.066 baris) menjadi 6 modul ES di `src/`
 - [x] `state.js` menjadi pemilik data yang bebas DOM
 - [x] Alur MVP identik dengan versi sebelum (terverifikasi)
@@ -17,7 +17,7 @@
 - [x] Riwayat commit bertahap `refactor:` per langkah, cabang `refactor/modul`, merge ke `main`
 
 ## Sprint 4 (SELESAI, v0.4.0) — Anti-banting: komponen, penyimpanan aman, perawatan
-- [x] Komponen reusable `KartuTugas` / `BuatBadge` / `PesanKosong`; teks pengguna lewat `textContent`
+- [x] Komponen reusable `KartuTugas` dan `BuatBadge`; teks pengguna lewat `textContent`
 - [x] Penyimpanan aman `tugaside:v1`: `muat()` menyaring data rusak, `simpan()` try/catch, cadangan memori
 - [x] Tugas & catatan bertahan setelah reload; peringatan toast saat penyimpanan penuh/diblokir
 - [x] Uji skenario rusak S2 dan S6 lewat DevTools (aplikasi tetap hidup)

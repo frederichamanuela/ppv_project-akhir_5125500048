@@ -92,4 +92,9 @@ Bila data rusak atau penyimpanan gagal, aplikasi tetap hidup dan pengguna diberi
 
 ## 10. Catatan Integritas (P12)
 
-Sebagian kode refactor dan pengaturan dokumen dibantu asisten AI (OpenCode). Berkas pemeriksa di `uji/` tidak diubah. Riwayat lengkap ada di `git log` dan `CHANGELOG.md`.
+Sebagian kode refactor dan penyusunan dokumen dibantu asisten AI. Berkas pemeriksa di `uji/` tidak diubah.
+
+- Alat: OpenCode (<https://opencode.ai>), model GLM.
+- Bagian yang dibantu: memecah monolit `app.js` menjadi modul ES, menulis `komponen.js` dan `simpanan.js`, merapikan `state.js`/`tugas.js`/`notes.js`, serta menyusun README, CHANGELOG, dan ROADMAP.
+- Contoh prompt: "Pecah app.js jadi modul ES tanpa mengubah perilaku", "Buat komponen KartuTugas yang semua teks pengguna lewat textContent", "Buat penyimpanan aman dengan KUNCI berversi, muat() yang menyaring data rusak dan tidak pernah melempar".
+- Semua hasil tetap diperiksa dan diuji lewat `uji/` serta DevTools; riwayat lengkap ada di `git log` dan `CHANGELOG.md`.
