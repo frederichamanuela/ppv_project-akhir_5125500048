@@ -45,6 +45,9 @@ src/
   notes.js      daftar catatan + editor + autosave
   board.js      canvas stabilo + sticky note + undo + toolbar teks
 assets/         logo.svg, kosong.svg, selesai.wav
+docs/
+  CHARTER.md    charter P09 + Pembaruan P13 (persona, MoSCoW, metrik)
+  konsep/       halaman konsep produk Tugas 7 (index.html, konsep.js, tampil.js)
 uji/            pemeriksa dari LAMPIRAN (tidak diubah)
 ```
 
@@ -89,3 +92,7 @@ Bila data rusak atau penyimpanan gagal, aplikasi tetap hidup dan pengguna diberi
 - Tanpa pustaka/framework eksternal: HTML, CSS, dan JavaScript murni (ES Modules).
 - `assets/logo.svg`, `assets/kosong.svg`, `assets/selesai.wav`: aset buatan sendiri untuk aplikasi ini.
 - Referensi desain: <https://id.pinterest.com/pin/707276316520163390/> (tampilan UI) dan <https://oatside.com/> (animasi interaktif).
+
+## 10. Sumber Templat
+
+`docs/konsep/index.html` dan `docs/konsep/tampil.js` disalin persis dari LAMPIRAN Tugas 7 — Konsep Produk (berkas soal dari ETHOL) dan tidak diubah; hanya `docs/konsep/konsep.js` yang diisi dengan konsep TugasIde.
