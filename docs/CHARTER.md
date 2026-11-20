@@ -4,7 +4,7 @@
 Mahasiswa D3 MM B kesulitan memantau deadline tugas karena tugas dari 13 mata kuliah diumumkan lewat kanal yang berbeda (grup chat, e-learning, lisan di kelas) dan tidak ada satu daftar yang menyatukannya, sehingga tugas terlewat atau baru dikerjakan mendekati batas.
 
 ## Persona
-Habib, 19 tahun, mahasiswa semester 3 D3 MM B. Tiap hari ia kuliah dan praktikum, lalu mengerjakan tugas malam hari lewat laptop dan ponsel. Info tugas ia dapat dari beberapa grup chat dan catatan di ponsel. Masalahnya: ia sering baru sadar ada tugas saat teman bertanya "sudah kumpul belum?", dan di minggu padat ia tidak tahu tugas mana yang harus dikerjakan lebih dulu.
+Muhammad Habib Al Rifai, 20 tahun, mahasiswa semester 3 D3 MM B yang aktif di organisasi E-Bio. Tiap hari ia kuliah dan praktikum Senin sampai Jumat, ditambah kegiatan organisasi, lalu mengerjakan tugas malam hari lewat laptop dan ponsel. Info tugas ia dapat dari ETHOL, grup kelas, dan dosen. Masalahnya: tenggat tersebar di tiga sampai empat tempat, sehingga ia sering baru sadar ada tugas sehari sebelum batas pengumpulan.
 
 ## Fitur MVP (MoSCoW)
 | Fitur | Label |
@@ -37,7 +37,7 @@ Won't: login dan sinkronisasi butuh server dan basis data, sedangkan proyek ini 
 Bagian di atas adalah charter Sprint 1 (P09) dan tidak dihapus supaya perubahannya terlihat. Perubahan di bawah ini berangkat dari bukti empat sprint, bukan ide baru.
 
 ### Persona dipertegas
-Persona tetap **Habib**, tidak diganti: ia mahasiswa semester 3 D3 MM B yang mengambil 13 mata kuliah hampir semuanya berpraktikum, kuliah dan praktikum sejak pagi, mengerjakan tugas malam hari bergantian di laptop dan ponsel, serta mendapat info tugas dari grup chat kelas, e-learning, dan pengumuman lisan. Yang ditambah hanya konteks keseharian dan kanal informasinya; masalahnya sama dengan P09.
+Persona tetap **Habib**, tidak diganti: Muhammad Habib Al Rifai, 20 tahun, mahasiswa semester 3 D3 MM B yang aktif di organisasi E-Bio. Kuliah dan praktikum Senin sampai Jumat, tugas masuk lewat ETHOL, grup kelas, dan dosen, lalu dikerjakan malam hari. Yang dipertegas hanya nama lengkap, usia, organisasi, dan kanal informasinya; masalahnya sama dengan P09.
 
 ### Keputusan fitur (MoSCoW → wajib/sebaiknya/belum)
 | Fitur | Label P13 | Bukti di repo |
@@ -47,7 +47,7 @@ Persona tetap **Habib**, tidak diganti: ia mahasiswa semester 3 D3 MM B yang men
 | Penyimpanan lokal yang tahan refresh dan data rusak | Wajib | `v0.4.0` |
 | Notes | Sebaiknya | `v0.1.0` |
 | Timer Pomodoro | Sebaiknya | `v0.1.0` |
-| Board sticky note (warisan Tugas 4) | Sebaiknya | `v0.1.0` |
+| Papan coretan/whiteboard (tab Board) | Sebaiknya | `v0.1.0` |
 | Login dan sinkron antar perangkat | Belum perlu | belum dibuat |
 | Notifikasi push/email saat deadline dekat | Belum perlu | belum dibuat |
 
